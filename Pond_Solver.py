@@ -24,44 +24,48 @@ class Pond_Solver(QMainWindow):
         
         canvas_label = QLabel(self)
         canvas_label.setPixmap(canvas)
-        canvas_label.setGeometry(100, 100, 650, 600)
+        canvas_label.setGeometry(5, 2, 750, 700)
 
         self.row_label = QLabel('Row index:', self)
-        self.row_label.setGeometry(50, 750, 100, 50)
+        self.row_label.setGeometry(50, 700, 100, 50)
         self.row_idx = QLineEdit(self)
-        self.row_idx.setGeometry(50, 800, 100, 50)
+        self.row_idx.setGeometry(50, 750, 100, 50)
 
         self.col_label = QLabel('Column index:', self)
-        self.col_label.setGeometry(250, 750, 120, 50)
+        self.col_label.setGeometry(250, 700, 120, 50)
         self.col_idx = QLineEdit(self)
-        self.col_idx.setGeometry(250, 800, 100, 50)
+        self.col_idx.setGeometry(250, 750, 100, 50)
 
         self.orientation_label = QLabel('Orientation index:', self)
-        self.orientation_label.setGeometry(450, 750, 120, 50)
+        self.orientation_label.setGeometry(450, 700, 120, 50)
         self.orientation = QComboBox(self)
         self.orientation.addItem('Horizontal')
         self.orientation.addItem('Vertical')
-        self.orientation.setGeometry(450, 800, 100, 50)
+        self.orientation.setGeometry(450, 750, 100, 50)
 
         self.color_label = QLabel('Color index:', self)
-        self.color_label.setGeometry(650, 750, 120, 50)
+        self.color_label.setGeometry(650, 700, 120, 50)
         self.color = QComboBox(self)
         self.color.addItem('Red')
         self.color.addItem('Yellow')
         self.color.addItem('Blue')
-        self.color.setGeometry(650, 800, 100, 50)
+        self.color.setGeometry(650, 750, 100, 50)
 
         self.add_block_button = QPushButton('Add block', self)
-        self.add_block_button.setGeometry(100, 900, 100, 50)
+        self.add_block_button.setGeometry(50, 850, 100, 50)
         self.add_block_button.clicked.connect(self.add_block)
 
         self.remove_last_button = QPushButton('Remove last', self)
-        self.remove_last_button.setGeometry(250, 900, 150, 50)
+        self.remove_last_button.setGeometry(200, 850, 150, 50)
         self.remove_last_button.clicked.connect(self.remove_last)
 
         self.solve_button = QPushButton('Solve', self)
-        self.solve_button.setGeometry(450, 900, 100, 50)
+        self.solve_button.setGeometry(400, 850, 100, 50)
         self.solve_button.clicked.connect(self.solve)
+
+        instruction = "Instructions:\n1. Make sure that the red block is added as the first block, otherwise there might be some undefined behavior.\n2. When adding block, enter the (smaller) coordinates of the left/up-most grid of the block.\n3. Press 'Solve' button to get the solution when finished adding blocks."
+        self.instruction = QLabel(instruction, self)
+        self.instruction.setGeometry(25, 900, 850, 100)
 
         if manuel_input != []:
             for i in range(1, len(manuel)):
@@ -159,20 +163,49 @@ class Pond_Solver(QMainWindow):
         self.remove_last_button.setVisible(False)
         self.solve_button.setVisible(False)
 
+        if hasattr(self, 'title'):
+            self.title.setText("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)))
+            self.title.setVisible(True)
+            self.button_prev.setVisible(True)
+            self.button_next.setVisible(True)
+            self.button_back.setVisible(True)
+        else:
+            self.title = QLabel("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)), self)
+            self.title.setGeometry(300,700,300,50)
+            self.title.show()
 
-        self.title = QLabel("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)), self)
-        self.title.setGeometry(100,50,300,50)
-        self.title.show()
+
+            self.button_prev = QPushButton("Previous", self)
+            self.button_prev.clicked.connect(self.show_previos_dict)
+            self.button_prev.move(300, 750)
+            self.button_prev.show()
+            self.button_next = QPushButton("Next", self)
+            self.button_next.clicked.connect(self.show_next_dict)
+            self.button_next.move(400, 750)
+            self.button_next.show()
+
+            self.button_back = QPushButton("Back", self)
+            self.button_back.clicked.connect(self.go_back)
+            self.button_back.move(25, 25)
+            self.button_back.show()
 
 
-        self.button_prev = QPushButton("Previous", self)
-        self.button_prev.clicked.connect(self.show_previos_dict)
-        self.button_prev.move(300, 725)
-        self.button_prev.show()
-        self.button_next = QPushButton("Next", self)
-        self.button_next.clicked.connect(self.show_next_dict)
-        self.button_next.move(400, 725)
-        self.button_next.show()
+    def go_back(self):
+        self.row_label.setVisible(True)
+        self.row_idx.setVisible(True)
+        self.col_label.setVisible(True)
+        self.col_idx.setVisible(True)
+        self.orientation_label.setVisible(True)
+        self.orientation.setVisible(True)
+        self.color_label.setVisible(True)
+        self.color.setVisible(True)
+        self.add_block_button.setVisible(True)
+        self.remove_last_button.setVisible(True)
+        self.solve_button.setVisible(True)
+        self.title.setVisible(False)
+        self.button_prev.setVisible(False)
+        self.button_next.setVisible(False)
+        self.button_back.setVisible(False)
 
     def show_previos_dict(self):
         # self.label.setVisible(False)
@@ -202,5 +235,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     manuel = [['Empty'], [1, 'Red', 'Horizontal', 2, 0, 2, 1], [2, 'Yellow', 'Horizontal', 0, 0, 0, 1], [3, 'Yellow', 'Horizontal', 4, 2, 4, 3], [4, 'Yellow', 'Horizontal', 5, 2, 5, 3], [5, 'Yellow', 'Horizontal', 5, 4, 5, 5], [6, 'Yellow', 'Horizontal', 3, 4, 3, 5], [7, 'Yellow', 'Vertical', 0, 3, 1, 3], [8, 'Yellow', 'Vertical', 0, 5, 1, 5], [9, 'Yellow', 'Vertical', 2, 3, 3, 3], [10, 'Yellow', 'Vertical', 4, 1, 5, 1], [11, 'Blue', 'Vertical', 3, 0, 5, 0], [12, 'Blue', 'Vertical', 0, 4, 2, 4]]
     window = Pond_Solver()
+    # window.setStyleSheet("background-color: white;")
     window.show()
     sys.exit(app.exec())
