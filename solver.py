@@ -1,4 +1,4 @@
-def get_char_indices(string, character):
+def get_block_indices(string, character):
     indices = []
     for i in range(len(string)):
         if string[i] == character:
@@ -29,7 +29,7 @@ def blocks_to_map(blocks):
 
 def map_to_blocks(original_map):
     map = []
-    print(original_map)
+    # print(original_map)
     for i in range(0, len(original_map), 2):
         map.append(original_map[i:i+2])
     result = []
@@ -37,9 +37,9 @@ def map_to_blocks(original_map):
     for i in range(1, 19):
         block = [0, 'Color', 'Orientation', -1, -1, -1, -1]
         if i < 10:
-            indices = get_char_indices(map, '0'+str(i))
+            indices = get_block_indices(map, '0'+str(i))
         else:
-            indices = get_char_indices(map, str(i))
+            indices = get_block_indices(map, str(i))
         if len(indices) == 0:
             break
         elif len(indices) == 2:
@@ -134,7 +134,7 @@ def get_possible_moves(blocks):
                         for j in range(end, start-1, -1):
                             tmp[j] = '00'
                             tmp[j+displacement] = str(block[0])
-                    print(''.join(tmp))
+                    # print(''.join(tmp))
                     result.append(''.join(tmp))
                 else:
                     break
@@ -171,7 +171,7 @@ def get_possible_moves(blocks):
                         for j in range(end, start-1, -6):
                             tmp[j] = '00'
                             tmp[j+displacement] = str(block[0])
-                    print(''.join(tmp))
+                    # print(''.join(tmp))
                     result.append(''.join(tmp))
                 else:
                     break    
@@ -192,13 +192,13 @@ def solved(blocks):
             break
     return False
 
-def print_map(map):
-    txt = ''
-    for i in range(6):
-        for j in range(0, 12, 2):
-            txt += map[12*i+j:12*i+j+2] + ' '
-        txt += '\n'
-    print(txt)
+# def print_map(map):
+#     txt = ''
+#     for i in range(6):
+#         for j in range(0, 12, 2):
+#             txt += map[12*i+j:12*i+j+2] + ' '
+#         txt += '\n'
+#     print(txt)
 
 # The graph for the solver is tree like
 # Each blocks have n children, where n refers to the sum of all possible moves from the current blocks
