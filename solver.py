@@ -29,6 +29,7 @@ def blocks_to_map(blocks):
 
 def map_to_blocks(original_map):
     map = []
+    print(original_map)
     for i in range(0, len(original_map), 2):
         map.append(original_map[i:i+2])
     result = []
@@ -105,14 +106,38 @@ def get_possible_moves(blocks):
         if block[2] == 'Horizontal':
             start = block[3] * 6 + block[4]
             end = block[5] * 6 + block[6]
-            if block[4] != 0 and map[start-1] == '00':
-                tmp = list(map)
-                if block[0] < 10:
-                    tmp[start-1] = '0' + str(block[0])
+            for i in range(start-1, block[3]*6-1, -1):
+                if map[i] == '00':
+                    displacement = start - i
+                    tmp = list(map) # Used to get a deep copy of map
+                    if block[0] < 10:
+                        for j in range(start, end+1):
+                            tmp[j] = '00'
+                            tmp[j-displacement] = '0' + str(block[0])
+                    else:
+                        for j in range(start, end+1):
+                            tmp[j] = '00'
+                            tmp[j-displacement] = str(block[0])
+                    result.append(''.join(tmp))
                 else:
-                    tmp[start-1] = str(block[0])
-                tmp[end] = '00'
-                result.append(''.join(tmp))
+                    break
+
+            for i in range(end+1, block[3]*6+6):
+                if map[i] == '00':
+                    displacement = i - end
+                    tmp = list(map)
+                    if block[0] < 10:
+                        for j in range(end, start-1, -1):
+                            tmp[j] = '00'
+                            tmp[j+displacement] = '0' + str(block[0])
+                    else:
+                        for j in range(end, start-1, -1):
+                            tmp[j] = '00'
+                            tmp[j+displacement] = str(block[0])
+                    print(''.join(tmp))
+                    result.append(''.join(tmp))
+                else:
+                    break
             if block[6] != 5 and map[end+1] == '00':
                 tmp = list(map)
                 tmp[start] = '00'
