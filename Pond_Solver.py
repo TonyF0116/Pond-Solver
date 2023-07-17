@@ -3,10 +3,11 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, Q
 from PyQt5.QtGui import QPixmap
 from solver import solver
 
+
 class Pond_Solver(QMainWindow):
-    def __init__(self, manuel_input = []):
+    def __init__(self, manuel_input=[]):
         super().__init__()
-        
+
         self.blocks = []
         self.blocks.append(['Empty'])
         self.label_list = []
@@ -21,7 +22,7 @@ class Pond_Solver(QMainWindow):
         self.yellow_vertical = QPixmap("res/yellow_vertical.png")
         self.blue_horizontal = QPixmap("res/blue_horizontal.png")
         self.blue_vertical = QPixmap("res/blue_vertical.png")
-        
+
         canvas_label = QLabel(self)
         canvas_label.setPixmap(canvas)
         canvas_label.setGeometry(5, 2, 750, 700)
@@ -71,7 +72,6 @@ class Pond_Solver(QMainWindow):
             for i in range(1, len(manuel)):
                 self.manuel_add_block(manuel_input[i])
 
-
     def manuel_add_block(self, block):
         self.blocks.append(block)
         # print(self.blocks)
@@ -79,32 +79,36 @@ class Pond_Solver(QMainWindow):
         if block[1] == 'Red':
             label = QLabel(self)
             label.setPixmap(self.red)
-            label.setGeometry(100 * (block[4] + 1), 100 * (block[3] + 1), 200, 100)
+            label.setGeometry(
+                100 * (block[4] + 1), 100 * (block[3] + 1), 200, 100)
             label.show()
         elif block[1] == 'Yellow':
             if block[2] == 'Horizontal':
                 label = QLabel(self)
                 label.setPixmap(self.yellow_horizontal)
-                label.setGeometry(100 * (block[4] + 1), 100 * (block[3] + 1), 200, 100)
+                label.setGeometry(
+                    100 * (block[4] + 1), 100 * (block[3] + 1), 200, 100)
                 label.show()
             elif block[2] == 'Vertical':
                 label = QLabel(self)
                 label.setPixmap(self.yellow_vertical)
-                label.setGeometry(100 * (block[4] + 1), 100 * (block[3] + 1), 100, 200)
+                label.setGeometry(
+                    100 * (block[4] + 1), 100 * (block[3] + 1), 100, 200)
                 label.show()
         elif block[1] == 'Blue':
             if block[2] == 'Horizontal':
                 label = QLabel(self)
                 label.setPixmap(self.blue_horizontal)
-                label.setGeometry(100 * (block[4] + 1), 100 * (block[3] + 1), 300, 100)
+                label.setGeometry(
+                    100 * (block[4] + 1), 100 * (block[3] + 1), 300, 100)
                 label.show()
             elif block[2] == 'Vertical':
                 label = QLabel(self)
                 label.setPixmap(self.blue_vertical)
-                label.setGeometry(100 * (block[4] + 1), 100 * (block[3] + 1), 100, 300)
+                label.setGeometry(
+                    100 * (block[4] + 1), 100 * (block[3] + 1), 100, 300)
                 label.show()
         self.label_list.append(label)
-
 
     def add_block(self):
         color = self.color.currentText()
@@ -137,18 +141,19 @@ class Pond_Solver(QMainWindow):
         self.label_list.pop(len(self.label_list)-1)
 
     def solve(self):
-        text, ok = QInputDialog.getText(self, '', 'Sure you want to start the solving process?')
+        text, ok = QInputDialog.getText(
+            self, '', 'Sure you want to start the solving process?')
         if not ok:
             return
         # print(self.blocks)
         self.solution = solver(self.blocks)
-        
+
         # print(self.solution)
         if len(self.solution) == 1:
             print('Unsolvable')
             print(self.blocks)
             exit()
-        
+
         self.current_index = 0
 
         self.row_label.setVisible(False)
@@ -164,16 +169,17 @@ class Pond_Solver(QMainWindow):
         self.solve_button.setVisible(False)
 
         if hasattr(self, 'title'):
-            self.title.setText("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)))
+            self.title.setText("Current step: {}, Total step: {}".format(
+                self.current_index+1, len(self.solution)))
             self.title.setVisible(True)
             self.button_prev.setVisible(True)
             self.button_next.setVisible(True)
             self.button_back.setVisible(True)
         else:
-            self.title = QLabel("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)), self)
-            self.title.setGeometry(300,700,300,50)
+            self.title = QLabel("Current step: {}, Total step: {}".format(
+                self.current_index+1, len(self.solution)), self)
+            self.title.setGeometry(300, 700, 300, 50)
             self.title.show()
-
 
             self.button_prev = QPushButton("Previous", self)
             self.button_prev.clicked.connect(self.show_previos_dict)
@@ -188,7 +194,6 @@ class Pond_Solver(QMainWindow):
             self.button_back.clicked.connect(self.go_back)
             self.button_back.move(25, 25)
             self.button_back.show()
-
 
     def go_back(self):
         self.row_label.setVisible(True)
@@ -210,30 +215,36 @@ class Pond_Solver(QMainWindow):
     def show_previos_dict(self):
         # self.label.setVisible(False)
         self.current_index = (self.current_index - 1) % len(self.solution)
-        self.title.setText("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)))
-        
+        self.title.setText("Current step: {}, Total step: {}".format(
+            self.current_index+1, len(self.solution)))
+
         current_step = self.solution[self.current_index]
         # print(current_step)
 
         for i in range(1, len(current_step)):
             block = current_step[i]
-            self.label_list[block[0]].move(100 * (block[4] + 1), 100 * (block[3] + 1))
+            self.label_list[block[0]].move(
+                100 * (block[4] + 1), 100 * (block[3] + 1))
 
     def show_next_dict(self):
         self.current_index = (self.current_index + 1) % len(self.solution)
-        self.title.setText("Current step: {}, Total step: {}".format(self.current_index+1, len(self.solution)))
-        
+        self.title.setText("Current step: {}, Total step: {}".format(
+            self.current_index+1, len(self.solution)))
+
         current_step = self.solution[self.current_index]
         # print(current_step)
 
         for i in range(1, len(current_step)):
             block = current_step[i]
             # print(block)
-            self.label_list[block[0]].move(100 * (block[4] + 1), 100 * (block[3] + 1))
+            self.label_list[block[0]].move(
+                100 * (block[4] + 1), 100 * (block[3] + 1))
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    manuel = [['Empty'], [1, 'Red', 'Horizontal', 2, 0, 2, 1], [2, 'Yellow', 'Horizontal', 0, 0, 0, 1], [3, 'Yellow', 'Horizontal', 4, 2, 4, 3], [4, 'Yellow', 'Horizontal', 5, 2, 5, 3], [5, 'Yellow', 'Horizontal', 5, 4, 5, 5], [6, 'Yellow', 'Horizontal', 3, 4, 3, 5], [7, 'Yellow', 'Vertical', 0, 3, 1, 3], [8, 'Yellow', 'Vertical', 0, 5, 1, 5], [9, 'Yellow', 'Vertical', 2, 3, 3, 3], [10, 'Yellow', 'Vertical', 4, 1, 5, 1], [11, 'Blue', 'Vertical', 3, 0, 5, 0], [12, 'Blue', 'Vertical', 0, 4, 2, 4]]
+    manuel = [['Empty'], [1, 'Red', 'Horizontal', 2, 0, 2, 1], [2, 'Yellow', 'Horizontal', 0, 0, 0, 1], [3, 'Yellow', 'Horizontal', 4, 2, 4, 3], [4, 'Yellow', 'Horizontal', 5, 2, 5, 3], [5, 'Yellow', 'Horizontal', 5, 4, 5, 5], [6, 'Yellow', 'Horizontal',
+                                                                                                                                                                                                                                    3, 4, 3, 5], [7, 'Yellow', 'Vertical', 0, 3, 1, 3], [8, 'Yellow', 'Vertical', 0, 5, 1, 5], [9, 'Yellow', 'Vertical', 2, 3, 3, 3], [10, 'Yellow', 'Vertical', 4, 1, 5, 1], [11, 'Blue', 'Vertical', 3, 0, 5, 0], [12, 'Blue', 'Vertical', 0, 4, 2, 4]]
     window = Pond_Solver()
     # window.setStyleSheet("background-color: white;")
     window.show()

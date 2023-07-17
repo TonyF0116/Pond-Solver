@@ -1,31 +1,34 @@
-def get_block_indices(string, character):
+def get_block_indices(blocks, block_index):
     indices = []
-    for i in range(len(string)):
-        if string[i] == character:
+    for i in range(len(blocks)):
+        if blocks[i] == block_index:
             indices.append(i)
     return indices
 
+
 def blocks_to_map(blocks):
-    result = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00']
+    result = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00',
+              '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00']
     for i in range(1, len(blocks)):
         block = blocks[i]
         if block[2] == 'Horizontal':
-            for i in range(block[4], block[6]+1):
+            for j in range(block[4], block[6]+1):
                 if block[0] < 10:
-                    result[block[3]*6+i] = '0' + str(block[0])
+                    result[block[3]*6+j] = '0' + str(block[0])
                 else:
-                    result[block[3]*6+i] = str(block[0])
+                    result[block[3]*6+j] = str(block[0])
         elif block[2] == 'Vertical':
-            for i in range(block[3], block[5]+1):
+            for j in range(block[3], block[5]+1):
                 if block[0] < 10:
-                    result[6*i+block[4]] = '0' + str(block[0])
+                    result[6*j+block[4]] = '0' + str(block[0])
                 else:
-                    result[6*i+block[4]] = str(block[0])
+                    result[6*j+block[4]] = str(block[0])
         else:
             print('Invalid orientation')
             exit()
 
     return ''.join(result)
+
 
 def map_to_blocks(original_map):
     map = []
@@ -92,6 +95,7 @@ def map_to_blocks(original_map):
         result.append(block)
     return result
 
+
 # Takes in the current blocks, return the map format of all possible moves
 def get_possible_moves(blocks):
     result = []
@@ -109,7 +113,7 @@ def get_possible_moves(blocks):
             for i in range(start-1, block[3]*6-1, -1):
                 if map[i] == '00':
                     displacement = start - i
-                    tmp = list(map) # Used to get a deep copy of map
+                    tmp = list(map)  # Used to get a deep copy of map
                     if block[0] < 10:
                         for j in range(start, end+1):
                             tmp[j] = '00'
@@ -174,7 +178,7 @@ def get_possible_moves(blocks):
                     # print(''.join(tmp))
                     result.append(''.join(tmp))
                 else:
-                    break    
+                    break
     return result
 
 
@@ -200,16 +204,17 @@ def solved(blocks):
 #         txt += '\n'
 #     print(txt)
 
+
 # The graph for the solver is tree like
 # Each blocks have n children, where n refers to the sum of all possible moves from the current blocks
 # Use BFS to find the solution with the least moves, then use backtracking to get the solution
 def solver(blocks):
     first_map = blocks_to_map(blocks)
-    visited = set() # Set of visited maps
+    visited = set()  # Set of visited maps
     added = set()
     added.add(first_map)
-    to_visit = [] # List of maps to visit
-    backtracking = {} # blocks of children/parent relation between maps
+    to_visit = []  # List of maps to visit
+    backtracking = {}  # blocks of children/parent relation between maps
     to_visit.append(first_map)
 
     last_visited = first_map
@@ -222,7 +227,7 @@ def solver(blocks):
             continue
         # print_map(cur_map)
         cur_blocks = map_to_blocks(cur_map)
-        
+
         visited.add(cur_map)
 
         if solved(cur_blocks):
@@ -238,8 +243,8 @@ def solver(blocks):
                 to_visit.append(move)
                 added.add(move)
                 backtracking[move] = cur_map
-    
-    result = [] # Result in map format
+
+    result = []  # Result in map format
     result.append(last_visited)
     index = 0
     while backtracking.get(result[index]) != None:
@@ -256,11 +261,11 @@ if __name__ == "__main__":
     # Map format: Row by row, separated by space between each row
     # sample_map = '220356 000356 110450 800477 890000 890000'
     # blocks starting from 1, where 1 is always the red block, 0 reserved for blanks
-    sample_blocks = [['Empty'], [1, 'Red', 'Horizontal', 2, 0, 2, 1], [2, 'Yellow', 'Horizontal', 0, 0, 0, 1], [3, 'Yellow', 'Horizontal', 4, 2, 4, 3], [4, 'Yellow', 'Horizontal', 5, 2, 5, 3], [5, 'Yellow', 'Horizontal', 5, 4, 5, 5], [6, 'Yellow', 'Horizontal', 3, 4, 3, 5], [7, 'Yellow', 'Vertical', 0, 3, 1, 3], [8, 'Yellow', 'Vertical', 0, 5, 1, 5], [9, 'Yellow', 'Vertical', 2, 3, 3, 3], [10, 'Yellow', 'Vertical', 4, 1, 5, 1], [11, 'Blue', 'Vertical', 3, 0, 5, 0], [12, 'Blue', 'Vertical', 0, 4, 2, 4]]
+    sample_blocks = [['Empty'], [1, 'Red', 'Horizontal', 2, 0, 2, 1], [2, 'Yellow', 'Horizontal', 0, 0, 0, 1], [3, 'Yellow', 'Horizontal', 4, 2, 4, 3], [4, 'Yellow', 'Horizontal', 5, 2, 5, 3], [5, 'Yellow', 'Horizontal', 5, 4, 5, 5], [6, 'Yellow', 'Horizontal', 3, 4, 3, 5], [
+        7, 'Yellow', 'Vertical', 0, 3, 1, 3], [8, 'Yellow', 'Vertical', 0, 5, 1, 5], [9, 'Yellow', 'Vertical', 2, 3, 3, 3], [10, 'Yellow', 'Vertical', 4, 1, 5, 1], [11, 'Blue', 'Vertical', 3, 0, 5, 0], [12, 'Blue', 'Vertical', 0, 4, 2, 4]]
     # Format: Index, Color, Orientation, x1, y1, x2, y2, ordering in x1, y1 smaller than x2, y2
     # sample_blocks[1] = ['1', 'Red', 'Horizontal', 2, 0, 2, 1]
     # print(blocks_to_map(sample_blocks))
     # print(solved(map_to_blocks(sample_map)))
     # sample_blocks = map_to_blocks(sample_map)
     print(solver(sample_blocks))
-
