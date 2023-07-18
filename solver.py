@@ -110,34 +110,34 @@ def get_possible_moves(blocks):
         if block[2] == 'Horizontal':
             start = block[3] * 6 + block[4]
             end = block[5] * 6 + block[6]
-            for i in range(start-1, block[3]*6-1, -1):
-                if map[i] == '00':
-                    displacement = start - i
+            for j in range(start-1, block[3]*6-1, -1):
+                if map[j] == '00':
+                    displacement = start - j
                     tmp = list(map)  # Used to get a deep copy of map
                     if block[0] < 10:
-                        for j in range(start, end+1):
-                            tmp[j] = '00'
-                            tmp[j-displacement] = '0' + str(block[0])
+                        for k in range(start, end+1):
+                            tmp[k] = '00'
+                            tmp[k-displacement] = '0' + str(block[0])
                     else:
-                        for j in range(start, end+1):
-                            tmp[j] = '00'
-                            tmp[j-displacement] = str(block[0])
+                        for k in range(start, end+1):
+                            tmp[k] = '00'
+                            tmp[k-displacement] = str(block[0])
                     result.append(''.join(tmp))
                 else:
                     break
 
-            for i in range(end+1, block[3]*6+6):
-                if map[i] == '00':
-                    displacement = i - end
+            for j in range(end+1, block[3]*6+6):
+                if map[j] == '00':
+                    displacement = j - end
                     tmp = list(map)
                     if block[0] < 10:
-                        for j in range(end, start-1, -1):
-                            tmp[j] = '00'
-                            tmp[j+displacement] = '0' + str(block[0])
+                        for k in range(end, start-1, -1):
+                            tmp[k] = '00'
+                            tmp[k+displacement] = '0' + str(block[0])
                     else:
-                        for j in range(end, start-1, -1):
-                            tmp[j] = '00'
-                            tmp[j+displacement] = str(block[0])
+                        for k in range(end, start-1, -1):
+                            tmp[k] = '00'
+                            tmp[k+displacement] = str(block[0])
                     # print(''.join(tmp))
                     result.append(''.join(tmp))
                 else:
@@ -147,34 +147,34 @@ def get_possible_moves(blocks):
             start = block[3] * 6 + block[4]
             end = block[5] * 6 + block[6]
 
-            for i in range(start-6, -1, -6):
-                if map[i] == '00':
-                    displacement = start - i
+            for j in range(start-6, -1, -6):
+                if map[j] == '00':
+                    displacement = start - j
                     tmp = list(map)
                     if block[0] < 10:
-                        for j in range(start, end+1, 6):
-                            tmp[j] = '00'
-                            tmp[j-displacement] = '0' + str(block[0])
+                        for k in range(start, end+1, 6):
+                            tmp[k] = '00'
+                            tmp[k-displacement] = '0' + str(block[0])
                     else:
-                        for j in range(start, end+1, 6):
-                            tmp[j] = '00'
-                            tmp[j-displacement] = str(block[0])
+                        for k in range(start, end+1, 6):
+                            tmp[k] = '00'
+                            tmp[k-displacement] = str(block[0])
                     result.append(''.join(tmp))
                 else:
                     break
 
-            for i in range(end+6, 36, 6):
-                if map[i] == '00':
-                    displacement = i - end
+            for j in range(end+6, 36, 6):
+                if map[j] == '00':
+                    displacement = j - end
                     tmp = list(map)
                     if block[0] < 10:
-                        for j in range(end, start-1, -6):
-                            tmp[j] = '00'
-                            tmp[j+displacement] = '0' + str(block[0])
+                        for k in range(end, start-1, -6):
+                            tmp[k] = '00'
+                            tmp[k+displacement] = '0' + str(block[0])
                     else:
-                        for j in range(end, start-1, -6):
-                            tmp[j] = '00'
-                            tmp[j+displacement] = str(block[0])
+                        for k in range(end, start-1, -6):
+                            tmp[k] = '00'
+                            tmp[k+displacement] = str(block[0])
                     # print(''.join(tmp))
                     result.append(''.join(tmp))
                 else:
@@ -221,8 +221,7 @@ def solver(blocks):
 
     while len(to_visit) != 0:
         # print(len(to_visit))
-        cur_map = to_visit[0]
-        to_visit.pop(0)
+        cur_map = to_visit.pop(0)
         if cur_map in visited:
             continue
         # print_map(cur_map)
