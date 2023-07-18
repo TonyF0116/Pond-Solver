@@ -219,6 +219,8 @@ def solver(blocks):
 
     last_visited = first_map
 
+    solution_generated = False
+
     while len(to_visit) != 0:
         # print(len(to_visit))
         cur_map = to_visit.pop(0)
@@ -231,6 +233,7 @@ def solver(blocks):
 
         if solved(cur_blocks):
             last_visited = cur_map
+            solution_generated = True
             break
 
         possible_moves = get_possible_moves(cur_blocks)
@@ -242,6 +245,9 @@ def solver(blocks):
                 to_visit.append(move)
                 added.add(move)
                 backtracking[move] = cur_map
+
+    if not solution_generated:
+        return []
 
     result = []  # Result in map format
     result.append(last_visited)

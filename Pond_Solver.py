@@ -149,7 +149,7 @@ class Pond_Solver(QMainWindow):
         self.solution = solver(self.blocks)
 
         # print(self.solution)
-        if len(self.solution) == 1:
+        if len(self.solution) == 0:
             print('Unsolvable')
             print(self.blocks)
             exit()
